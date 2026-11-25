@@ -91,13 +91,14 @@ You can run the standalone Tray app directly from PowerShell or Explorer:
 3. Launch `JellyfinMPCShim.Tray.exe`.
 4. In the **Jellyfin** section:
    - Enter your **Server** URL (e.g., `http://192.168.x.x:8096` or `https://your-domain`).
+   - Optionally customize **Cast Name** to change how this player appears in Jellyfin's Cast menu (defaults to `Jellyfin MPC Shim Tray`).
    - Either enter **Username** + **Password** and click **OK**, **or** click **Quick Connect** and approve the displayed code in your Jellyfin web/mobile app (the status label turns green **Connected** once signed in).
 5. In the **MPC** section:
    - Select the path to your MPC executable (e.g., `mpc-hc64.exe`, `mpc-be64.exe`, or `unplugged-mpc-hc.exe`).
    - Set **Port** to match the Web Interface port configured in step 2 (`13579`).
    - Choose your **Fork** (or leave on **Auto-detect from executable**), and optionally enable **Start Fullscreen** or add **Extra Args**.
 6. Click **OK** to save and minimize to the Windows system tray (or **Cancel** to discard changes).
-7. Open Jellyfin Web (or any Jellyfin client), click the **Cast** icon, and select **Jellyfin MPC Shim Tray**.
+7. Open Jellyfin Web (or any Jellyfin client), click the **Cast** icon, and select your configured **Cast Name** (default: **Jellyfin MPC Shim Tray**).
 
 ---
 
