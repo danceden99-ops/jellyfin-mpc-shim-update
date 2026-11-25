@@ -24,8 +24,20 @@ internal class Worker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-        await _jellyfinClient.Start(_jellyfinSettings.Host, _jellyfinSettings.Username, _jellyfinSettings.Password, _cts.Token);
-        await _mpcClient.Start(_mpcSettings.Path, _mpcSettings.Port);
+        if (!string.IsNullOrWhiteSpace(_jellyfinSettings.AccessToken))
+        {
+            await _jellyfinClient.StartWithToken(_jellyfinSettings.Host, _jellyfinSettings.AccessToken, _cts.Token);
+        }
+        else
+        {
+            await _jellyfinClient.Start(_jellyfinSettings.Host, _jellyfinSettings.Username ?? string.Empty, _jellyfinSettings.Password ?? string.Empty, _cts.Token);
+        }
+        await _mpcClient.Start(
+            _mpcSettings.Path,
+            _mpcSettings.Port,
+            JellyfinMPCShim.Models.MpcForkProfile.ParseOrDefault(_mpcSettings.Fork),
+            _mpcSettings.StartFullscreen,
+            _mpcSettings.ExtraArgs);
         try
         {
             await Task.Delay(Timeout.Infinite, stoppingToken);

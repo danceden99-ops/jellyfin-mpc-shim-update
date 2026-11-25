@@ -59,11 +59,20 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
+var castName = string.IsNullOrWhiteSpace(Settings.Default.CastDeviceName)
+    ? "Jellyfin MPC Shim Tray"
+    : Settings.Default.CastDeviceName.Trim();
+var deviceId = $"jellyfin-mpc-shim-tray-{version}-{Settings.Default.JellyfinDeviceId:N}";
 var settings = host.Services.GetRequiredService<JellyfinSdkSettings>();
 settings.Initialize(
-    "Jellyfin MPC Shim Tray",
+    castName,
     version,
     Environment.MachineName,
-    $"jellyfin-mpc-shim-tray-{version}-{Settings.Default.JellyfinDeviceId:N}");
+    deviceId);
+host.Services.GetRequiredService<JellyfinMPCShim.JellyfinClientIdentity>().Initialize(
+    castName,
+    version,
+    Environment.MachineName,
+    deviceId);
 var eh = host.Services.GetService<ExceptionLogger>();
 await host.RunAsync();

@@ -41,6 +41,12 @@ partial class MainForm
         logsToolStripMenuItem = new ToolStripMenuItem();
         exitToolStripMenuItem = new ToolStripMenuItem();
         groupBoxJellyfin = new GroupBox();
+        textBoxCastName = new TextBox();
+        labelCastName = new Label();
+        labelServerExample = new Label();
+        labelAuthStatus = new Label();
+        buttonSignOut = new Button();
+        buttonQuickConnect = new Button();
         textBoxJellyfinPassword = new TextBox();
         textBoxJellyfinUsername = new TextBox();
         textBoxJellyfinHost = new TextBox();
@@ -48,12 +54,18 @@ partial class MainForm
         label2 = new Label();
         label1 = new Label();
         groupBoxMpc = new GroupBox();
+        textBoxMpcArgs = new TextBox();
+        labelMpcArgs = new Label();
+        comboBoxMpcFork = new ComboBox();
+        labelMpcFork = new Label();
+        checkBoxMpcFullscreen = new CheckBox();
         buttonSelectMpc = new IconButton();
         numericUpDownMpcPort = new NumericUpDown();
         textBoxMpcPath = new TextBox();
         label5 = new Label();
         label4 = new Label();
-        buttonSave = new IconButton();
+        buttonOk = new Button();
+        buttonCancel = new Button();
         trayMenu.SuspendLayout();
         groupBoxJellyfin.SuspendLayout();
         groupBoxMpc.SuspendLayout();
@@ -112,6 +124,12 @@ partial class MainForm
         // groupBoxJellyfin
         // 
         groupBoxJellyfin.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        groupBoxJellyfin.Controls.Add(textBoxCastName);
+        groupBoxJellyfin.Controls.Add(labelCastName);
+        groupBoxJellyfin.Controls.Add(labelServerExample);
+        groupBoxJellyfin.Controls.Add(labelAuthStatus);
+        groupBoxJellyfin.Controls.Add(buttonSignOut);
+        groupBoxJellyfin.Controls.Add(buttonQuickConnect);
         groupBoxJellyfin.Controls.Add(textBoxJellyfinPassword);
         groupBoxJellyfin.Controls.Add(textBoxJellyfinUsername);
         groupBoxJellyfin.Controls.Add(textBoxJellyfinHost);
@@ -120,10 +138,55 @@ partial class MainForm
         groupBoxJellyfin.Controls.Add(label1);
         groupBoxJellyfin.Location = new Point(12, 12);
         groupBoxJellyfin.Name = "groupBoxJellyfin";
-        groupBoxJellyfin.Size = new Size(514, 128);
+        groupBoxJellyfin.Size = new Size(514, 191);
         groupBoxJellyfin.TabIndex = 1;
         groupBoxJellyfin.TabStop = false;
         groupBoxJellyfin.Text = "Jellyfin";
+        // 
+        // labelCastName
+        // 
+        labelCastName.AutoSize = true;
+        labelCastName.Location = new Point(6, 112);
+        labelCastName.Name = "labelCastName";
+        labelCastName.Size = new Size(65, 15);
+        labelCastName.TabIndex = 10;
+        labelCastName.Text = "Cast Name";
+        // 
+        // textBoxCastName
+        // 
+        textBoxCastName.Location = new Point(83, 109);
+        textBoxCastName.Name = "textBoxCastName";
+        textBoxCastName.PlaceholderText = "Jellyfin MPC Shim Tray";
+        textBoxCastName.Size = new Size(425, 23);
+        textBoxCastName.TabIndex = 6;
+        // 
+        // buttonQuickConnect
+        // 
+        buttonQuickConnect.Location = new Point(83, 141);
+        buttonQuickConnect.Name = "buttonQuickConnect";
+        buttonQuickConnect.Size = new Size(125, 28);
+        buttonQuickConnect.TabIndex = 7;
+        buttonQuickConnect.Text = "Quick Connect";
+        buttonQuickConnect.UseVisualStyleBackColor = true;
+        buttonQuickConnect.Click += buttonQuickConnect_Click;
+        // 
+        // buttonSignOut
+        // 
+        buttonSignOut.Location = new Point(214, 141);
+        buttonSignOut.Name = "buttonSignOut";
+        buttonSignOut.Size = new Size(90, 28);
+        buttonSignOut.TabIndex = 8;
+        buttonSignOut.Text = "Sign Out";
+        buttonSignOut.UseVisualStyleBackColor = true;
+        buttonSignOut.Click += buttonSignOut_Click;
+        // 
+        // labelAuthStatus
+        // 
+        labelAuthStatus.AutoSize = true;
+        labelAuthStatus.Location = new Point(312, 147);
+        labelAuthStatus.Name = "labelAuthStatus";
+        labelAuthStatus.Size = new Size(0, 15);
+        labelAuthStatus.TabIndex = 9;
         // 
         // textBoxJellyfinPassword
         // 
@@ -144,8 +207,19 @@ partial class MainForm
         // 
         textBoxJellyfinHost.Location = new Point(83, 22);
         textBoxJellyfinHost.Name = "textBoxJellyfinHost";
-        textBoxJellyfinHost.Size = new Size(425, 23);
+        textBoxJellyfinHost.PlaceholderText = "http://192.168.x.x:8096";
+        textBoxJellyfinHost.Size = new Size(255, 23);
         textBoxJellyfinHost.TabIndex = 3;
+        // 
+        // labelServerExample
+        // 
+        labelServerExample.AutoSize = true;
+        labelServerExample.ForeColor = SystemColors.GrayText;
+        labelServerExample.Location = new Point(344, 25);
+        labelServerExample.Name = "labelServerExample";
+        labelServerExample.Size = new Size(156, 15);
+        labelServerExample.TabIndex = 9;
+        labelServerExample.Text = "e.g. http://192.168.x.x:8096";
         // 
         // label3
         // 
@@ -177,17 +251,67 @@ partial class MainForm
         // groupBoxMpc
         // 
         groupBoxMpc.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        groupBoxMpc.Controls.Add(textBoxMpcArgs);
+        groupBoxMpc.Controls.Add(labelMpcArgs);
+        groupBoxMpc.Controls.Add(comboBoxMpcFork);
+        groupBoxMpc.Controls.Add(labelMpcFork);
+        groupBoxMpc.Controls.Add(checkBoxMpcFullscreen);
         groupBoxMpc.Controls.Add(buttonSelectMpc);
         groupBoxMpc.Controls.Add(numericUpDownMpcPort);
         groupBoxMpc.Controls.Add(textBoxMpcPath);
         groupBoxMpc.Controls.Add(label5);
         groupBoxMpc.Controls.Add(label4);
-        groupBoxMpc.Location = new Point(12, 146);
+        groupBoxMpc.Location = new Point(12, 209);
         groupBoxMpc.Name = "groupBoxMpc";
-        groupBoxMpc.Size = new Size(514, 100);
+        groupBoxMpc.Size = new Size(514, 158);
         groupBoxMpc.TabIndex = 3;
         groupBoxMpc.TabStop = false;
         groupBoxMpc.Text = "MPC";
+        // 
+        // checkBoxMpcFullscreen
+        // 
+        checkBoxMpcFullscreen.AutoSize = true;
+        checkBoxMpcFullscreen.Location = new Point(214, 53);
+        checkBoxMpcFullscreen.Name = "checkBoxMpcFullscreen";
+        checkBoxMpcFullscreen.Size = new Size(106, 19);
+        checkBoxMpcFullscreen.TabIndex = 4;
+        checkBoxMpcFullscreen.Text = "Start Fullscreen";
+        checkBoxMpcFullscreen.UseVisualStyleBackColor = true;
+        // 
+        // labelMpcFork
+        // 
+        labelMpcFork.AutoSize = true;
+        labelMpcFork.Location = new Point(6, 82);
+        labelMpcFork.Name = "labelMpcFork";
+        labelMpcFork.Size = new Size(30, 15);
+        labelMpcFork.TabIndex = 5;
+        labelMpcFork.Text = "Fork";
+        // 
+        // comboBoxMpcFork
+        // 
+        comboBoxMpcFork.DropDownStyle = ComboBoxStyle.DropDownList;
+        comboBoxMpcFork.FormattingEnabled = true;
+        comboBoxMpcFork.Location = new Point(83, 79);
+        comboBoxMpcFork.Name = "comboBoxMpcFork";
+        comboBoxMpcFork.Size = new Size(240, 23);
+        comboBoxMpcFork.TabIndex = 6;
+        // 
+        // labelMpcArgs
+        // 
+        labelMpcArgs.AutoSize = true;
+        labelMpcArgs.Location = new Point(6, 112);
+        labelMpcArgs.Name = "labelMpcArgs";
+        labelMpcArgs.Size = new Size(63, 15);
+        labelMpcArgs.TabIndex = 7;
+        labelMpcArgs.Text = "Extra Args";
+        // 
+        // textBoxMpcArgs
+        // 
+        textBoxMpcArgs.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        textBoxMpcArgs.Location = new Point(83, 109);
+        textBoxMpcArgs.Name = "textBoxMpcArgs";
+        textBoxMpcArgs.Size = new Size(425, 23);
+        textBoxMpcArgs.TabIndex = 8;
         // 
         // buttonSelectMpc
         // 
@@ -236,26 +360,38 @@ partial class MainForm
         label4.TabIndex = 0;
         label4.Text = "Path";
         // 
-        // buttonSave
+        // buttonOk
         // 
-        buttonSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-        buttonSave.IconChar = IconChar.FloppyDisk;
-        buttonSave.IconColor = Color.Black;
-        buttonSave.IconFont = IconFont.Auto;
-        buttonSave.IconSize = 16;
-        buttonSave.Location = new Point(498, 252);
-        buttonSave.Name = "buttonSave";
-        buttonSave.Size = new Size(28, 23);
-        buttonSave.TabIndex = 6;
-        buttonSave.UseVisualStyleBackColor = true;
-        buttonSave.Click += buttonSave_Click;
+        buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        buttonOk.Location = new Point(360, 373);
+        buttonOk.Name = "buttonOk";
+        buttonOk.Size = new Size(80, 28);
+        buttonOk.TabIndex = 6;
+        buttonOk.Text = "OK";
+        buttonOk.UseVisualStyleBackColor = true;
+        buttonOk.Click += buttonSave_Click;
+        // 
+        // buttonCancel
+        // 
+        buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        buttonCancel.DialogResult = DialogResult.Cancel;
+        buttonCancel.Location = new Point(446, 373);
+        buttonCancel.Name = "buttonCancel";
+        buttonCancel.Size = new Size(80, 28);
+        buttonCancel.TabIndex = 7;
+        buttonCancel.Text = "Cancel";
+        buttonCancel.UseVisualStyleBackColor = true;
+        buttonCancel.Click += buttonCancel_Click;
         // 
         // MainForm
         // 
+        AcceptButton = buttonOk;
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(538, 287);
-        Controls.Add(buttonSave);
+        CancelButton = buttonCancel;
+        ClientSize = new Size(538, 413);
+        Controls.Add(buttonCancel);
+        Controls.Add(buttonOk);
         Controls.Add(groupBoxMpc);
         Controls.Add(groupBoxJellyfin);
         Icon = (Icon)resources.GetObject("$this.Icon");
@@ -294,5 +430,17 @@ partial class MainForm
     private ToolStripMenuItem logsToolStripMenuItem;
     private ToolStripMenuItem groupsToolStripMenuItem;
     private FontAwesome.Sharp.IconButton buttonSelectMpc;
-    private FontAwesome.Sharp.IconButton buttonSave;
+    private Button buttonOk;
+    private Button buttonCancel;
+    private Label labelServerExample;
+    private Button buttonQuickConnect;
+    private Button buttonSignOut;
+    private Label labelAuthStatus;
+    private CheckBox checkBoxMpcFullscreen;
+    private Label labelMpcFork;
+    private ComboBox comboBoxMpcFork;
+    private Label labelMpcArgs;
+    private TextBox textBoxMpcArgs;
+    private Label labelCastName;
+    private TextBox textBoxCastName;
 }

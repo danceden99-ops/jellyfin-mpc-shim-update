@@ -46,11 +46,17 @@ builder.Services.AddMpcClient(options =>
 builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
+var deviceId = $"jellfiin-mpc-shim-cli-{version}-{Guid.NewGuid():N}";
 var settings = host.Services.GetRequiredService<JellyfinSdkSettings>();
 settings.Initialize(
     "Jellyfin MPC Shim cli",
     version,
     Environment.MachineName,
-    $"jellfiin-mpc-shim-cli-{version}-{Guid.NewGuid():N}");
+    deviceId);
+host.Services.GetRequiredService<JellyfinMPCShim.JellyfinClientIdentity>().Initialize(
+    "Jellyfin MPC Shim cli",
+    version,
+    Environment.MachineName,
+    deviceId);
 
 await host.RunAsync();

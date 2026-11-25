@@ -21,6 +21,9 @@ internal class MpcClient : IMpcClient, IJellyfinMessageHandler
     private MPCHomeCinema? _mpc;
     private MPCHomeCinemaObserver? _mpcObserver;
     private string? _path;
+    private MpcForkProfile _forkProfile = MpcForkProfile.GetProfile(MpcFork.Auto, null);
+    private bool _startFullscreen;
+    private string? _extraLaunchArgs;
     private List<PlaylistItem>? _syncPlaylist;
     private bool _syncPlay;
     private State _syncPlayState;
@@ -38,9 +41,24 @@ internal class MpcClient : IMpcClient, IJellyfinMessageHandler
         _mpcClientOptions = mpcClientOptions;
     }
 
-    public async Task Start(string path, int port)
+    public Task Start(string path, int port)
+    {
+        return Start(
+            path,
+            port,
+            _mpcClientOptions.Value.Fork,
+            _mpcClientOptions.Value.StartFullscreen,
+            _mpcClientOptions.Value.ExtraLaunchArgs);
+    }
+
+    public async Task Start(string path, int port, MpcFork fork, bool startFullscreen = false, string? extraLaunchArgs = null)
     {
         _path = path;
+        _forkProfile = MpcForkProfile.GetProfile(fork, path);
+        _startFullscreen = startFullscreen;
+        _extraLaunchArgs = extraLaunchArgs;
+        _logger.LogInformation("MPC client configured for {fork} on port {port}", _forkProfile.DisplayName, port);
+
         if (_mpcObserver != null)
         {
             _mpcObserver.Stop();
@@ -135,12 +153,19 @@ internal class MpcClient : IMpcClient, IJellyfinMessageHandler
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to get MPC status");
-            //Wenn MPC nicht läuft, dann starten probieren
+            //If MPC is not running, launch it with fork-specific arguments and wait for its web interface
             if (!string.IsNullOrWhiteSpace(_path) && File.Exists(_path))
             {
-                _logger.LogInformation("Starting mpc {path}", _path);
-                var p = Process.Start(_path);
-                p.WaitForInputIdle();
+                var launchArgs = BuildLaunchArguments();
+                _logger.LogInformation("Starting {fork} at {path} with args '{args}'", _forkProfile.DisplayName, _path, launchArgs);
+                var startInfo = new ProcessStartInfo(_path)
+                {
+                    Arguments = launchArgs,
+                    UseShellExecute = true
+                };
+                var p = Process.Start(startInfo);
+                p?.WaitForInputIdle(5000);
+                await WaitForWebInterfaceAsync();
                 await StartObserver();
             }
         }
@@ -148,6 +173,10 @@ internal class MpcClient : IMpcClient, IJellyfinMessageHandler
         try
         {
             var result = await _mpc.OpenFileAsync(filename);
+            if (_forkProfile.CommandSettleDelayMs > 0)
+            {
+                await Task.Delay(_forkProfile.CommandSettleDelayMs);
+            }
             if (startPaused)
             {
                 result = await _mpc.PauseAsync();
@@ -172,6 +201,47 @@ internal class MpcClient : IMpcClient, IJellyfinMessageHandler
             _logger.LogCritical(ex, "Error communicating with MPC");
             throw;
         }
+    }
+
+    private string BuildLaunchArguments()
+    {
+        var args = new List<string>();
+        if (_startFullscreen && !string.IsNullOrWhiteSpace(_forkProfile.FullscreenSwitch))
+        {
+            args.Add(_forkProfile.FullscreenSwitch);
+        }
+
+        if (!string.IsNullOrWhiteSpace(_extraLaunchArgs))
+        {
+            args.Add(_extraLaunchArgs.Trim());
+        }
+
+        return string.Join(' ', args);
+    }
+
+    private async Task WaitForWebInterfaceAsync()
+    {
+        if (_mpc == null)
+        {
+            return;
+        }
+
+        var deadline = DateTime.UtcNow.AddMilliseconds(_forkProfile.StartupTimeoutMs);
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                await _mpc.GetInfo();
+                return;
+            }
+            catch
+            {
+                await Task.Delay(_forkProfile.StartupPollIntervalMs);
+            }
+        }
+
+        _logger.LogWarning("Timed out waiting {timeout}ms for {fork} web interface to respond",
+            _forkProfile.StartupTimeoutMs, _forkProfile.DisplayName);
     }
 
     private async Task<Result> SetPosition(long startPosition)

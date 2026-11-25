@@ -106,5 +106,65 @@ namespace JellyfinMPCShim.Tray.Properties {
                 this["JellyfinDeviceId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string JellyfinToken {
+            get {
+                return ((string)(this["JellyfinToken"]));
+            }
+            set {
+                this["JellyfinToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Auto")]
+        public string MpcFork {
+            get {
+                return ((string)(this["MpcFork"]));
+            }
+            set {
+                this["MpcFork"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MpcFullscreen {
+            get {
+                return ((bool)(this["MpcFullscreen"]));
+            }
+            set {
+                this["MpcFullscreen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MpcExtraArgs {
+            get {
+                return ((string)(this["MpcExtraArgs"]));
+            }
+            set {
+                this["MpcExtraArgs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Jellyfin MPC Shim Tray")]
+        public string CastDeviceName {
+            get {
+                return ((string)(this["CastDeviceName"]));
+            }
+            set {
+                this["CastDeviceName"] = value;
+            }
+        }
     }
 }
